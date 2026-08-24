@@ -1,0 +1,37 @@
+type: Bug
+name: Correção de bug
+description: Registrar comportamento incorreto ou regressão.
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Resumo do problema
+      description: Descreva o comportamento incorreto e o impacto observado.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamento esperado
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Passos para reproduzir
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versão, release ou commit
+      description: Informe quando aplicável.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs e evidências
+      description: Remova credenciais e dados pessoais antes de anexar.
