@@ -1,0 +1,41 @@
+type: Problem
+name: Problema estrutural
+description: Investigar causa estrutural de incidentes ou falhas recorrentes.
+body:
+  - type: textarea
+    id: pattern
+    attributes:
+      label: Padrão recorrente
+      description: Descreva os incidentes, falhas ou sintomas que se repetem.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto acumulado
+    validations:
+      required: true
+  - type: textarea
+    id: related
+    attributes:
+      label: Incidentes e Issues relacionados
+      placeholder: |
+        - #123
+        - #456
+    validations:
+      required: true
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Hipóteses iniciais
+      description: Não trate hipótese como causa confirmada.
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado da investigação
+      value: |
+        - [ ] Causa ou fatores contribuintes identificados
+        - [ ] Ações preventivas registradas
+        - [ ] Responsáveis e prazos definidos
+    validations:
+      required: true
