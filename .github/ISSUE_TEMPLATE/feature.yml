@@ -1,0 +1,42 @@
+type: Feature
+name: Nova funcionalidade
+description: Solicitar uma nova capacidade ou melhoria de negócio.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema ou oportunidade
+      description: Descreva o contexto, o problema e quem é impactado.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Resultado esperado
+      description: Explique qual capacidade deverá existir após a entrega.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceite
+      value: |
+        - [ ] Dado que..., quando..., então...
+        - [ ] Dado que..., quando..., então...
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Fora do escopo
+      description: Registre explicitamente o que não será entregue.
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependências
+      description: Relacione sistemas, equipes, decisões ou outras Issues.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidências e referências
+      description: Inclua exemplos, imagens, documentos ou referências sem dados sensíveis.
