@@ -1,0 +1,34 @@
+type: Tech Debt
+name: Dívida técnica
+description: Registrar risco, limitação ou custo técnico que precisa ser reduzido.
+body:
+  - type: textarea
+    id: debt
+    attributes:
+      label: Dívida identificada
+      description: Descreva a limitação existente.
+    validations:
+      required: true
+  - type: textarea
+    id: consequences
+    attributes:
+      label: Consequências atuais
+      description: Informe retrabalho, custo, instabilidade, risco ou bloqueios.
+    validations:
+      required: true
+  - type: textarea
+    id: target
+    attributes:
+      label: Estado desejado
+    validations:
+      required: true
+  - type: textarea
+    id: approach
+    attributes:
+      label: Abordagem sugerida
+      description: Registre alternativas quando existirem.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidências técnicas
+      description: Inclua métricas, ocorrências ou referências que sustentem a necessidade.
