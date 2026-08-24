@@ -1,0 +1,24 @@
+type: Epic
+name: Melhoria
+description: Registrar uma melhoria ou iniciativa.
+body:
+  - type: dropdown
+    id: team
+    attributes:
+      label: Equipe
+      description: Selecione a equipe responsável pela demanda.
+      options:
+        - VX 360
+        - RPA
+        - SGI
+        - Dados
+    validations:
+      required: true
+  - type: textarea
+    id: melhoria
+    attributes:
+      label: Descrição da melhoria
+      description: Descreva a melhoria solicitada, o problema atual e o resultado esperado.
+      placeholder: Explique de forma clara o que precisa ser melhorado.
+    validations:
+      required: true
