@@ -1,0 +1,25 @@
+type: Task
+name: Tarefa técnica ou operacional
+description: Registrar uma entrega técnica ou operacional com resultado verificável.
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objetivo
+      description: Descreva o resultado técnico ou operacional esperado.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de conclusão
+      value: |
+        - [ ] Resultado verificável:
+        - [ ] Evidência esperada:
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependências
+      placeholder: Sistemas, acessos, dados, pessoas ou outras Issues.
