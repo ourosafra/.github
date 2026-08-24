@@ -1,0 +1,46 @@
+type: Incident
+name: Incidente
+description: Registrar interrupção ou degradação de serviço.
+body:
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto
+      description: Informe usuários, processos, sistemas e operações afetadas.
+    validations:
+      required: true
+  - type: input
+    id: started_at
+    attributes:
+      label: Início estimado
+      placeholder: YYYY-MM-DD HH:MM
+    validations:
+      required: true
+  - type: input
+    id: detected_at
+    attributes:
+      label: Horário de detecção
+      placeholder: YYYY-MM-DD HH:MM
+    validations:
+      required: true
+  - type: textarea
+    id: symptoms
+    attributes:
+      label: Sintomas e evidências
+      description: Não inclua credenciais ou dados pessoais desnecessários.
+    validations:
+      required: true
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: Mitigação executada ou planejada
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Situação do rollback
+  - type: textarea
+    id: timeline
+    attributes:
+      label: Linha do tempo
+      placeholder: |
+        - YYYY-MM-DD HH:MM — Evento ou ação
