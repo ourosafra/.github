@@ -1,0 +1,26 @@
+type: Security
+name: Melhoria ou risco de segurança
+description: Registrar hardening, risco ou correção de segurança sem expor informação sensível.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Não inclua senhas, tokens, chaves, dados pessoais ou detalhes exploráveis de vulnerabilidade ativa.
+    id: need
+    attributes:
+      label: Risco ou necessidade
+      description: Descreva de forma segura e sem revelar credenciais ou detalhes exploráveis.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto potencial
+    validations:
+      required: true
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: Mitigação ou controle esperado
+    validations:
+      required: true
