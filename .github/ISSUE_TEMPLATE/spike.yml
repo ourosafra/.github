@@ -1,0 +1,43 @@
+type: Spike
+name: Spike ou investigação
+description: Registrar investigação técnica com tempo e resultado definidos.
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Pergunta a responder
+      description: Defina a decisão ou incerteza que motivou a investigação.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Alternativas a avaliar
+      placeholder: |
+        1.
+        2.
+        3.
+  - type: input
+    id: timebox
+    attributes:
+      label: Timebox
+      placeholder: "Exemplo: 2 dias"
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Saída esperada
+      value: |
+        - [ ] Conclusão documentada
+        - [ ] Recomendação
+        - [ ] Riscos e limitações
+        - [ ] ADR ou novas Issues, quando aplicável
+    validations:
+      required: true
