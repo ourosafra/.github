@@ -1,9 +1,10 @@
 {
-  "generatedAt": "2026-08-26T22:08:30.978Z",
+  "generatedAt": "2026-08-26T22:09:57.214Z",
   "sourceOrganization": "OS-Sistemas",
   "targetOrganization": "ourosafra",
   "projects": {
-    "created": [
+    "created": [],
+    "updated": [
       {
         "sourceNumber": 22,
         "targetNumber": 11,
@@ -28,35 +29,160 @@
         "sourceNumber": 17,
         "targetNumber": 15,
         "title": "Delivery - Dev & SGI"
+      },
+      {
+        "sourceNumber": 16,
+        "targetNumber": 9,
+        "title": "Portfolio de Tecnologia"
       }
     ],
-    "updated": [],
-    "errors": [
+    "errors": [],
+    "warnings": [
       {
         "project": "[TEMPLATE] Delivery - Dev & SGI",
-        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+        "field": "Priority",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "[TEMPLATE] Delivery - Dev & SGI",
+        "field": "Risk",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "[TEMPLATE] Delivery - Dev & SGI",
+        "field": "Environment",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "[TEMPLATE] Delivery - Dev & SGI",
+        "field": "Effort",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "[TEMPLATE] Delivery - Dev & SGI",
+        "view": "Kanban - Meus",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2View\"],\"locations\":[{\"line\":3,\"column\":15}],\"message\":\"Cannot create a view for a closed project.\"}]"
+      },
+      {
+        "project": "[TEMPLATE] Delivery - Dev & SGI",
+        "view": "Prev. Entrega - Meus",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2View\"],\"locations\":[{\"line\":3,\"column\":15}],\"message\":\"Cannot create a view for a closed project.\"}]"
+      },
+      {
+        "project": "[TEMPLATE] Delivery - Dev & SGI",
+        "view": "Kanban - Serviço",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2View\"],\"locations\":[{\"line\":3,\"column\":15}],\"message\":\"Cannot create a view for a closed project.\"}]"
+      },
+      {
+        "project": "[TEMPLATE] Delivery - Dev & SGI",
+        "view": "Backlog em lista",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2View\"],\"locations\":[{\"line\":3,\"column\":15}],\"message\":\"Cannot create a view for a closed project.\"}]"
+      },
+      {
+        "project": "[TEMPLATE] Delivery - Dev & SGI",
+        "view": "Table - Visualização de datas",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2View\"],\"locations\":[{\"line\":3,\"column\":15}],\"message\":\"Cannot create a view for a closed project.\"}]"
+      },
+      {
+        "project": "[TEMPLATE] Delivery - Dev & SGI",
+        "view": "Table - Export",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2View\"],\"locations\":[{\"line\":3,\"column\":15}],\"message\":\"Cannot create a view for a closed project.\"}]"
       },
       {
         "project": "Incidents and Reliability",
-        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+        "field": "Team",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
       },
       {
-        "project": "Delivery - Dados & ID",
-        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+        "project": "Incidents and Reliability",
+        "field": "Priority",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Incidents and Reliability",
+        "field": "Severity",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Incidents and Reliability",
+        "field": "Risk",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Incidents and Reliability",
+        "field": "Environment",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
       },
       {
         "project": "Delivery - RPA & VX",
-        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+        "field": "Team",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Delivery - RPA & VX",
+        "field": "Priority",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Delivery - RPA & VX",
+        "field": "Effort",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Delivery - RPA & VX",
+        "field": "Risk",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Delivery - RPA & VX",
+        "field": "Environment",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
       },
       {
         "project": "Delivery - Dev & SGI",
-        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+        "field": "Priority",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Delivery - Dev & SGI",
+        "field": "Risk",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Delivery - Dev & SGI",
+        "field": "Environment",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Delivery - Dev & SGI",
+        "field": "Effort",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Delivery - Dev & SGI",
+        "field": "Sprint",
+        "error": "Unsupported automatic field type: ITERATION"
+      },
+      {
+        "project": "Delivery - Dev & SGI",
+        "field": "Team",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Delivery - Dev & SGI",
+        "field": "Severity",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"At least one singleSelectOption is required for data_type SINGLE_SELECT.\"}]"
+      },
+      {
+        "project": "Delivery - Dev & SGI",
+        "view": "Prev. Entrega - Meus",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2View\"],\"locations\":[{\"line\":3,\"column\":15}],\"message\":\"Roadmap views do not support visible fields.\"}]"
       },
       {
         "project": "Portfolio de Tecnologia",
-        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+        "field": "Target Date",
+        "error": "[{\"type\":\"UNPROCESSABLE\",\"path\":[\"createProjectV2Field\"],\"locations\":[{\"line\":3,\"column\":7}],\"message\":\"Name has already been taken\"}]"
       }
-    ],
-    "warnings": []
+    ]
   }
 }
