@@ -160,7 +160,7 @@ jobs:
             return data.createProjectV2Field.projectV2Field;
           }
 
-          let organization = (await getOrganization()).organization;
+          const organization = (await getOrganization()).organization;
           const targetByTitle = new Map(
             organization.projectsV2.nodes.map(project => [project.title, project]),
           );
@@ -203,7 +203,6 @@ jobs:
                   projectId: target.id,
                   shortDescription: source.shortDescription || '',
                   readme: source.readme || '',
-                  public: Boolean(source.public),
                   closed: Boolean(source.closed),
                 },
               });
