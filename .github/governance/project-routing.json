@@ -1,0 +1,23 @@
+{
+  "organization": "ourosafra",
+  "projects": {
+    "portfolio": { "number": 9 },
+    "deliveryDev": { "number": 15 },
+    "deliveryRpa": { "number": 14 },
+    "deliveryDados": { "number": 13 },
+    "incidents": { "number": 12 }
+  },
+  "routing": {
+    "teams": {
+      "VX 360": ["deliveryRpa"],
+      "RPA": ["deliveryRpa"],
+      "SGI": ["deliveryDev"],
+      "Dados": ["deliveryDados"]
+    },
+    "types": {
+      "Epic": ["portfolio"],
+      "Incident": ["incidents"],
+      "Problem": ["incidents"]
+    }
+  }
+}
