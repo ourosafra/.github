@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-08-26T22:13:36.360Z",
+  "issueTypes": {
+    "created": [
+      {
+        "name": "Problem",
+        "id": 850089004
+      }
+    ],
+    "existing": [
+      "Bug",
+      "Epic",
+      "Feature",
+      "Incident",
+      "Security",
+      "Spike",
+      "Task",
+      "Tech Debt"
+    ],
+    "errors": []
+  },
+  "issueFields": {
+    "created": [],
+    "existing": [
+      {
+        "name": "Team",
+        "id": 45853834
+      }
+    ],
+    "errors": [],
+    "warnings": []
+  }
+}
