@@ -1,0 +1,166 @@
+name: Repair migrated Project views
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/repair-project-migration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Generate Ouro Safra GitHub App token
+        id: token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547
+        with:
+          app-id: 4731476
+          private-key: ${{ secrets.PROJECTS_APP_PRIVATE_KEY }}
+          owner: ourosafra
+
+      - name: Repair template and roadmap views
+        shell: bash
+        env:
+          GH_APP_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          node <<'NODE'
+          const token = process.env.GH_APP_TOKEN;
+
+          async function graphql(query, variables = {}) {
+            const response = await fetch('https://api.github.com/graphql', {
+              method: 'POST',
+              headers: {
+                Accept: 'application/vnd.github+json',
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'X-GitHub-Api-Version': '2026-03-10',
+              },
+              body: JSON.stringify({ query, variables }),
+            });
+            const payload = await response.json();
+            if (!response.ok || payload.errors?.length) {
+              throw new Error(JSON.stringify(payload.errors || payload));
+            }
+            return payload.data;
+          }
+
+          async function findProject(title) {
+            const data = await graphql(`
+              query($login:String!) {
+                organization(login:$login) {
+                  projectsV2(first:100) { nodes { id number title closed } }
+                }
+              }
+            `, { login: 'ourosafra' });
+            return data.organization.projectsV2.nodes.find(p => p.title === title);
+          }
+
+          async function projectDetail(id) {
+            const data = await graphql(`
+              query($id:ID!) {
+                node(id:$id) {
+                  ... on ProjectV2 {
+                    id
+                    fields(first:100) {
+                      nodes {
+                        ... on ProjectV2Field { id name }
+                        ... on ProjectV2SingleSelectField { id name }
+                        ... on ProjectV2MultiSelectField { id name }
+                        ... on ProjectV2IterationField { id name }
+                      }
+                    }
+                    views(first:100) { nodes { id name layout filter } }
+                  }
+                }
+              }
+            `, { id });
+            return data.node;
+          }
+
+          async function setClosed(projectId, closed) {
+            await graphql(`
+              mutation($input:UpdateProjectV2Input!) {
+                updateProjectV2(input:$input) { projectV2 { id closed } }
+              }
+            `, { input: { projectId, closed } });
+          }
+
+          async function ensureView(projectId, spec) {
+            const detail = await projectDetail(projectId);
+            let view = detail.views.nodes.find(v => v.name === spec.name);
+            const fieldByName = new Map(detail.fields.nodes.filter(Boolean).map(f => [f.name, f]));
+            const visibleFieldIds = (spec.fields || []).map(name => fieldByName.get(name)?.id).filter(Boolean);
+            const configuration = spec.layout === 'ROADMAP_LAYOUT' ? undefined : { visibleFieldIds };
+
+            if (!view) {
+              const input = {
+                projectId,
+                name: spec.name,
+                layout: spec.layout,
+                ...(configuration ? { configuration } : {}),
+              };
+              const data = await graphql(`
+                mutation($input:CreateProjectV2ViewInput!) {
+                  createProjectV2View(input:$input) { projectV2View { id name } }
+                }
+              `, { input });
+              view = data.createProjectV2View.projectV2View;
+            }
+
+            const input = {
+              viewId: view.id,
+              name: spec.name,
+              layout: spec.layout,
+              filter: spec.filter || '',
+              ...(configuration ? { configuration } : {}),
+            };
+            await graphql(`
+              mutation($input:UpdateProjectV2ViewInput!) {
+                updateProjectV2View(input:$input) { projectV2View { id name } }
+              }
+            `, { input });
+            console.log(`Ready: ${spec.name}`);
+          }
+
+          const template = await findProject('[TEMPLATE] Delivery - Dev & SGI');
+          if (!template) throw new Error('Template project not found');
+
+          await setClosed(template.id, false);
+          try {
+            const views = [
+              { name:'Kanban - Meus', layout:'BOARD_LAYOUT', filter:'assignee:@me and -status:Done OR no:assignee ', fields:['Title','Assignees','Status','Linked pull requests','Sub-issues progress','Priority'] },
+              { name:'Prev. Entrega - Meus', layout:'ROADMAP_LAYOUT', filter:'assignee:@me', fields:[] },
+              { name:'Kanban - Serviço', layout:'BOARD_LAYOUT', filter:'', fields:['Title','Assignees','Status','Linked pull requests','Sub-issues progress','Priority'] },
+              { name:'Backlog em lista', layout:'TABLE_LAYOUT', filter:'', fields:['Title','Assignees','Status','Linked pull requests','Parent issue','Sub-issues progress','Created','Updated','Closed','Priority','Risk','Environment','Effort','Target Date'] },
+              { name:'Table - Visualização de datas', layout:'TABLE_LAYOUT', filter:'', fields:['Title','Assignees','Status','Created','Updated','Closed','Target Date'] },
+              { name:'Table - Export', layout:'TABLE_LAYOUT', filter:'', fields:['Title','Assignees','Status','Labels','Linked pull requests','Reviewers','Parent issue','Sub-issues progress','Created','Updated','Closed','Priority','Risk','Environment','Ticket','Effort','Target Date'] },
+            ];
+            for (const view of views) await ensureView(template.id, view);
+          } finally {
+            await setClosed(template.id, true);
+          }
+
+          const dev = await findProject('Delivery - Dev & SGI');
+          if (!dev) throw new Error('Delivery - Dev & SGI not found');
+          await ensureView(dev.id, {
+            name: 'Prev. Entrega - Meus',
+            layout: 'ROADMAP_LAYOUT',
+            filter: 'assignee:@me',
+            fields: [],
+          });
+
+          await graphql(`
+            mutation($projectId:ID!) {
+              markProjectV2AsTemplate(input:{projectId:$projectId}) { projectV2 { id } }
+            }
+          `, { projectId: template.id });
+
+          console.log('Project view repair completed.');
+          NODE
