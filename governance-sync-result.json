@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-08-26T22:08:30.978Z",
+  "sourceOrganization": "OS-Sistemas",
+  "targetOrganization": "ourosafra",
+  "projects": {
+    "created": [
+      {
+        "sourceNumber": 22,
+        "targetNumber": 11,
+        "title": "[TEMPLATE] Delivery - Dev & SGI"
+      },
+      {
+        "sourceNumber": 20,
+        "targetNumber": 12,
+        "title": "Incidents and Reliability"
+      },
+      {
+        "sourceNumber": 19,
+        "targetNumber": 13,
+        "title": "Delivery - Dados & ID"
+      },
+      {
+        "sourceNumber": 18,
+        "targetNumber": 14,
+        "title": "Delivery - RPA & VX"
+      },
+      {
+        "sourceNumber": 17,
+        "targetNumber": 15,
+        "title": "Delivery - Dev & SGI"
+      }
+    ],
+    "updated": [],
+    "errors": [
+      {
+        "project": "[TEMPLATE] Delivery - Dev & SGI",
+        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+      },
+      {
+        "project": "Incidents and Reliability",
+        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+      },
+      {
+        "project": "Delivery - Dados & ID",
+        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+      },
+      {
+        "project": "Delivery - RPA & VX",
+        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+      },
+      {
+        "project": "Delivery - Dev & SGI",
+        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+      },
+      {
+        "project": "Portfolio de Tecnologia",
+        "error": "[{\"type\":\"FORBIDDEN\",\"path\":[\"updateProjectV2\"],\"locations\":[{\"line\":3,\"column\":9}],\"message\":\"Viewer not authorized to change project visibility\"}]"
+      }
+    ],
+    "warnings": []
+  }
+}
