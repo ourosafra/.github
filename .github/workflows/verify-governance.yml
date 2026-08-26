@@ -1,0 +1,144 @@
+name: Verify migrated governance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-governance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Generate Ouro Safra GitHub App token
+        id: token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547
+        with:
+          app-id: 4731476
+          private-key: ${{ secrets.PROJECTS_APP_PRIVATE_KEY }}
+          owner: ourosafra
+
+      - name: Verify governance
+        env:
+          GH_APP_TOKEN: ${{ steps.token.outputs.token }}
+        shell: bash
+        run: |
+          node <<'NODE'
+          import fs from 'node:fs';
+          const token = process.env.GH_APP_TOKEN;
+          const expectedTitles = [
+            '[TEMPLATE] Delivery - Dev & SGI',
+            'Incidents and Reliability',
+            'Delivery - Dados & ID',
+            'Delivery - RPA & VX',
+            'Delivery - Dev & SGI',
+            'Portfolio de Tecnologia',
+          ];
+          const expectedTypes = ['Bug','Epic','Feature','Incident','Problem','Security','Spike','Task','Tech Debt'];
+
+          async function rest(endpoint) {
+            const response = await fetch(`https://api.github.com${endpoint}`, {
+              headers: {
+                Accept: 'application/vnd.github+json',
+                Authorization: `Bearer ${token}`,
+                'X-GitHub-Api-Version': '2026-03-10',
+              },
+            });
+            const text = await response.text();
+            let data = null;
+            try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+            if (!response.ok) throw new Error(`${response.status} ${endpoint}: ${JSON.stringify(data)}`);
+            return data;
+          }
+
+          async function graphql(query, variables = {}) {
+            const response = await fetch('https://api.github.com/graphql', {
+              method: 'POST',
+              headers: {
+                Accept: 'application/vnd.github+json',
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'X-GitHub-Api-Version': '2026-03-10',
+              },
+              body: JSON.stringify({ query, variables }),
+            });
+            const payload = await response.json();
+            if (!response.ok || payload.errors?.length) throw new Error(JSON.stringify(payload.errors || payload));
+            return payload.data;
+          }
+
+          const list = await graphql(`
+            query($login:String!) {
+              organization(login:$login) {
+                projectsV2(first:100) { nodes { id number title closed } }
+              }
+            }
+          `, { login: 'ourosafra' });
+
+          const projects = [];
+          for (const title of expectedTitles) {
+            const project = list.organization.projectsV2.nodes.find(item => item.title === title);
+            if (!project) throw new Error(`Missing Project: ${title}`);
+            const detail = await graphql(`
+              query($id:ID!) {
+                node(id:$id) {
+                  ... on ProjectV2 {
+                    id number title closed
+                    fields(first:100) {
+                      nodes {
+                        __typename
+                        ... on ProjectV2Field { name dataType }
+                        ... on ProjectV2SingleSelectField { name dataType options { name } }
+                        ... on ProjectV2MultiSelectField { name dataType multiSelectOptions { name } }
+                        ... on ProjectV2IterationField { name dataType }
+                      }
+                    }
+                    views(first:100) { nodes { name layout filter } }
+                  }
+                }
+              }
+            `, { id: project.id });
+            projects.push({
+              number: detail.node.number,
+              title: detail.node.title,
+              closed: detail.node.closed,
+              fields: detail.node.fields.nodes.filter(Boolean),
+              views: detail.node.views.nodes,
+            });
+          }
+
+          const issueTypes = await rest('/orgs/ourosafra/issue-types');
+          const issueFields = await rest('/orgs/ourosafra/issue-fields');
+          const typeNames = issueTypes.map(item => item.name);
+          const missingTypes = expectedTypes.filter(name => !typeNames.includes(name));
+          const team = issueFields.find(field => field.name === 'Team');
+          if (missingTypes.length) throw new Error(`Missing Issue Types: ${missingTypes.join(', ')}`);
+          if (!team) throw new Error('Missing Team issue field');
+
+          const result = {
+            verifiedAt: new Date().toISOString(),
+            projects,
+            issueTypes: issueTypes.filter(item => expectedTypes.includes(item.name)),
+            teamIssueField: team,
+          };
+          fs.mkdirSync('.github/governance', { recursive: true });
+          fs.writeFileSync('.github/governance/verification.json', JSON.stringify(result, null, 2) + '\n');
+          console.log(`Verified ${projects.length} Projects, ${expectedTypes.length} Issue Types and Team field #${team.id}.`);
+          NODE
+
+      - name: Commit verification
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/governance/verification.json
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: record governance verification"
+          git push
