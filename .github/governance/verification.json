@@ -1,0 +1,842 @@
+{
+  "verifiedAt": "2026-08-26T22:16:52.632Z",
+  "projects": [
+    {
+      "number": 11,
+      "title": "[TEMPLATE] Delivery - Dev & SGI",
+      "closed": true,
+      "fields": [
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Title",
+          "dataType": "TITLE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Assignees",
+          "dataType": "ASSIGNEES"
+        },
+        {
+          "__typename": "ProjectV2SingleSelectField",
+          "name": "Status",
+          "dataType": "SINGLE_SELECT",
+          "options": [
+            {
+              "name": "Todo"
+            },
+            {
+              "name": "In Progress"
+            },
+            {
+              "name": "Done"
+            }
+          ]
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Labels",
+          "dataType": "LABELS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Linked pull requests",
+          "dataType": "LINKED_PULL_REQUESTS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Milestone",
+          "dataType": "MILESTONE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Repository",
+          "dataType": "REPOSITORY"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Reviewers",
+          "dataType": "REVIEWERS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Parent issue",
+          "dataType": "PARENT_ISSUE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Sub-issues progress",
+          "dataType": "SUB_ISSUES_PROGRESS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Created",
+          "dataType": "CREATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Updated",
+          "dataType": "UPDATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Closed",
+          "dataType": "CLOSED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Ticket",
+          "dataType": "TEXT"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Target Date",
+          "dataType": "DATE"
+        }
+      ],
+      "views": [
+        {
+          "name": "View 1",
+          "layout": "TABLE_LAYOUT",
+          "filter": null
+        },
+        {
+          "name": "Kanban - Meus",
+          "layout": "BOARD_LAYOUT",
+          "filter": "assignee:@me and -status:Done OR no:assignee "
+        },
+        {
+          "name": "Prev. Entrega - Meus",
+          "layout": "ROADMAP_LAYOUT",
+          "filter": "assignee:@me"
+        },
+        {
+          "name": "Kanban - Serviço",
+          "layout": "BOARD_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "Backlog em lista",
+          "layout": "TABLE_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "Table - Visualização de datas",
+          "layout": "TABLE_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "Table - Export",
+          "layout": "TABLE_LAYOUT",
+          "filter": ""
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "title": "Incidents and Reliability",
+      "closed": false,
+      "fields": [
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Title",
+          "dataType": "TITLE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Assignees",
+          "dataType": "ASSIGNEES"
+        },
+        {
+          "__typename": "ProjectV2SingleSelectField",
+          "name": "Status",
+          "dataType": "SINGLE_SELECT",
+          "options": [
+            {
+              "name": "Todo"
+            },
+            {
+              "name": "In Progress"
+            },
+            {
+              "name": "Done"
+            }
+          ]
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Labels",
+          "dataType": "LABELS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Linked pull requests",
+          "dataType": "LINKED_PULL_REQUESTS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Milestone",
+          "dataType": "MILESTONE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Repository",
+          "dataType": "REPOSITORY"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Reviewers",
+          "dataType": "REVIEWERS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Parent issue",
+          "dataType": "PARENT_ISSUE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Sub-issues progress",
+          "dataType": "SUB_ISSUES_PROGRESS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Created",
+          "dataType": "CREATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Updated",
+          "dataType": "UPDATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Closed",
+          "dataType": "CLOSED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Ticket",
+          "dataType": "TEXT"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Target Date",
+          "dataType": "DATE"
+        }
+      ],
+      "views": [
+        {
+          "name": "View 1",
+          "layout": "TABLE_LAYOUT",
+          "filter": ""
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "title": "Delivery - Dados & ID",
+      "closed": false,
+      "fields": [
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Title",
+          "dataType": "TITLE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Assignees",
+          "dataType": "ASSIGNEES"
+        },
+        {
+          "__typename": "ProjectV2SingleSelectField",
+          "name": "Status",
+          "dataType": "SINGLE_SELECT",
+          "options": [
+            {
+              "name": "Todo"
+            },
+            {
+              "name": "In Progress"
+            },
+            {
+              "name": "Done"
+            }
+          ]
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Labels",
+          "dataType": "LABELS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Linked pull requests",
+          "dataType": "LINKED_PULL_REQUESTS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Milestone",
+          "dataType": "MILESTONE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Repository",
+          "dataType": "REPOSITORY"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Reviewers",
+          "dataType": "REVIEWERS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Parent issue",
+          "dataType": "PARENT_ISSUE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Sub-issues progress",
+          "dataType": "SUB_ISSUES_PROGRESS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Created",
+          "dataType": "CREATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Updated",
+          "dataType": "UPDATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Closed",
+          "dataType": "CLOSED"
+        }
+      ],
+      "views": [
+        {
+          "name": "View 1",
+          "layout": "TABLE_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "View 2",
+          "layout": "BOARD_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "Kanban",
+          "layout": "BOARD_LAYOUT",
+          "filter": ""
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "title": "Delivery - RPA & VX",
+      "closed": false,
+      "fields": [
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Title",
+          "dataType": "TITLE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Assignees",
+          "dataType": "ASSIGNEES"
+        },
+        {
+          "__typename": "ProjectV2SingleSelectField",
+          "name": "Status",
+          "dataType": "SINGLE_SELECT",
+          "options": [
+            {
+              "name": "Todo"
+            },
+            {
+              "name": "In Progress"
+            },
+            {
+              "name": "Done"
+            }
+          ]
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Labels",
+          "dataType": "LABELS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Linked pull requests",
+          "dataType": "LINKED_PULL_REQUESTS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Milestone",
+          "dataType": "MILESTONE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Repository",
+          "dataType": "REPOSITORY"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Reviewers",
+          "dataType": "REVIEWERS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Parent issue",
+          "dataType": "PARENT_ISSUE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Sub-issues progress",
+          "dataType": "SUB_ISSUES_PROGRESS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Created",
+          "dataType": "CREATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Updated",
+          "dataType": "UPDATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Closed",
+          "dataType": "CLOSED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Ticket",
+          "dataType": "TEXT"
+        }
+      ],
+      "views": [
+        {
+          "name": "View 1",
+          "layout": "TABLE_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "View 2",
+          "layout": "BOARD_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "View 3",
+          "layout": "BOARD_LAYOUT",
+          "filter": ""
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "title": "Delivery - Dev & SGI",
+      "closed": false,
+      "fields": [
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Title",
+          "dataType": "TITLE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Assignees",
+          "dataType": "ASSIGNEES"
+        },
+        {
+          "__typename": "ProjectV2SingleSelectField",
+          "name": "Status",
+          "dataType": "SINGLE_SELECT",
+          "options": [
+            {
+              "name": "Todo"
+            },
+            {
+              "name": "In Progress"
+            },
+            {
+              "name": "Done"
+            }
+          ]
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Labels",
+          "dataType": "LABELS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Linked pull requests",
+          "dataType": "LINKED_PULL_REQUESTS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Milestone",
+          "dataType": "MILESTONE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Repository",
+          "dataType": "REPOSITORY"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Reviewers",
+          "dataType": "REVIEWERS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Parent issue",
+          "dataType": "PARENT_ISSUE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Sub-issues progress",
+          "dataType": "SUB_ISSUES_PROGRESS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Created",
+          "dataType": "CREATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Updated",
+          "dataType": "UPDATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Closed",
+          "dataType": "CLOSED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Ticket",
+          "dataType": "TEXT"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Target Date",
+          "dataType": "DATE"
+        }
+      ],
+      "views": [
+        {
+          "name": "View 1",
+          "layout": "TABLE_LAYOUT",
+          "filter": null
+        },
+        {
+          "name": "Backlog em lista",
+          "layout": "TABLE_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "Kanban - Serviço",
+          "layout": "BOARD_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "Kanban - Meus",
+          "layout": "BOARD_LAYOUT",
+          "filter": "assignee:@me and -status:Done OR no:assignee "
+        },
+        {
+          "name": "Table - Visualização de datas",
+          "layout": "TABLE_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "Table - Export",
+          "layout": "TABLE_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "Prev. Entrega - Meus",
+          "layout": "ROADMAP_LAYOUT",
+          "filter": "assignee:@me"
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Portfolio de Tecnologia",
+      "closed": false,
+      "fields": [
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Title",
+          "dataType": "TITLE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Assignees",
+          "dataType": "ASSIGNEES"
+        },
+        {
+          "__typename": "ProjectV2SingleSelectField",
+          "name": "Team",
+          "dataType": "SINGLE_SELECT",
+          "options": []
+        },
+        {
+          "__typename": "ProjectV2SingleSelectField",
+          "name": "Priority",
+          "dataType": "SINGLE_SELECT",
+          "options": []
+        },
+        {
+          "__typename": "ProjectV2SingleSelectField",
+          "name": "Risk",
+          "dataType": "SINGLE_SELECT",
+          "options": []
+        },
+        {
+          "__typename": "ProjectV2SingleSelectField",
+          "name": "Status",
+          "dataType": "SINGLE_SELECT",
+          "options": [
+            {
+              "name": "Todo"
+            },
+            {
+              "name": "In Progress"
+            },
+            {
+              "name": "Done"
+            }
+          ]
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Labels",
+          "dataType": "LABELS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Linked pull requests",
+          "dataType": "LINKED_PULL_REQUESTS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Milestone",
+          "dataType": "MILESTONE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Repository",
+          "dataType": "REPOSITORY"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Reviewers",
+          "dataType": "REVIEWERS"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Parent issue",
+          "dataType": "PARENT_ISSUE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Target date",
+          "dataType": "DATE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Created",
+          "dataType": "CREATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Updated",
+          "dataType": "UPDATED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Closed",
+          "dataType": "CLOSED"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Start date",
+          "dataType": "DATE"
+        },
+        {
+          "__typename": "ProjectV2Field",
+          "name": "Sub-issues progress",
+          "dataType": "SUB_ISSUES_PROGRESS"
+        }
+      ],
+      "views": [
+        {
+          "name": "View 1",
+          "layout": "TABLE_LAYOUT",
+          "filter": ""
+        },
+        {
+          "name": "View 4",
+          "layout": "BOARD_LAYOUT",
+          "filter": ""
+        }
+      ]
+    }
+  ],
+  "issueTypes": [
+    {
+      "id": 14296579,
+      "node_id": "IT_kwDOBMOpus4A2iYD",
+      "name": "Task",
+      "description": "Para classificar as etapas de uma feature  ou um pedaço de uma entrega",
+      "color": "green",
+      "created_at": "2024-02-08T17:24:59Z",
+      "updated_at": "2026-08-20T15:31:28Z",
+      "is_enabled": true
+    },
+    {
+      "id": 14296581,
+      "node_id": "IT_kwDOBMOpus4A2iYF",
+      "name": "Bug",
+      "description": "Um acontecimento não esperado na funcionalidade ou processo implementado, que JÁ TEM correção identificada",
+      "color": "red",
+      "created_at": "2024-02-08T17:24:59Z",
+      "updated_at": "2026-08-20T15:29:32Z",
+      "is_enabled": true
+    },
+    {
+      "id": 14296583,
+      "node_id": "IT_kwDOBMOpus4A2iYH",
+      "name": "Feature",
+      "description": "Para classificar entregas de novas funcionalidades ou alterações do comportamento de algo já existente.",
+      "color": "blue",
+      "created_at": "2024-02-08T17:25:00Z",
+      "updated_at": "2026-08-20T15:30:44Z",
+      "is_enabled": true
+    },
+    {
+      "id": 124486728,
+      "node_id": "IT_kwDOBMOpus4Ha4RI",
+      "name": "Epic",
+      "description": "Issues dedicadas para projetos ou grandes melhorias, que precisam de planejamento de entregas",
+      "color": "purple",
+      "created_at": "2026-08-20T15:30:14Z",
+      "updated_at": "2026-08-20T15:30:14Z",
+      "is_enabled": true
+    },
+    {
+      "id": 124681933,
+      "node_id": "IT_kwDOBMOpus4Hbn7N",
+      "name": "Incident",
+      "description": "Uma interrupção não planejada ou degradação de um serviço de produção que precise de interação humana",
+      "color": "orange",
+      "created_at": "2026-08-20T15:32:03Z",
+      "updated_at": "2026-08-20T15:32:03Z",
+      "is_enabled": true
+    },
+    {
+      "id": 124777238,
+      "node_id": "IT_kwDOBMOpus4Hb_MW",
+      "name": "Tech Debt",
+      "description": "Demanda sem ser originada por 3° que reduz débito técnico, aumenta manutenibilidade ou melhora arquitetura sem adicionar novas funcionalidades.",
+      "color": "yellow",
+      "created_at": "2026-08-20T15:32:56Z",
+      "updated_at": "2026-08-20T15:33:58Z",
+      "is_enabled": true
+    },
+    {
+      "id": 124940244,
+      "node_id": "IT_kwDOBMOpus4Hcm_U",
+      "name": "Security",
+      "description": "Trabalho relacionado a identificar, mitigar ou prevenir vulnerabilidades de segurança ou riscos de compliance",
+      "color": "purple",
+      "created_at": "2026-08-20T15:34:26Z",
+      "updated_at": "2026-08-20T15:34:26Z",
+      "is_enabled": true
+    },
+    {
+      "id": 125008015,
+      "node_id": "IT_kwDOBMOpus4Hc3iP",
+      "name": "Spike",
+      "description": "Investigação técnica antes de uma nova implementação",
+      "color": "blue",
+      "created_at": "2026-08-20T15:35:03Z",
+      "updated_at": "2026-08-20T15:35:03Z",
+      "is_enabled": true
+    },
+    {
+      "id": 850089004,
+      "node_id": "IT_kwDOBMOpus4yq1Qs",
+      "name": "Problem",
+      "description": "Investigar causa estrutural de incidentes ou falhas recorrentes.",
+      "color": "gray",
+      "created_at": "2026-08-26T22:13:36Z",
+      "updated_at": "2026-08-26T22:13:36Z",
+      "is_enabled": true
+    }
+  ],
+  "teamIssueField": {
+    "id": 45853834,
+    "node_id": "IFSS_kgDOArusig",
+    "name": "Team",
+    "description": "Para qual equipe a demanda foi designada?",
+    "data_type": "single_select",
+    "created_at": "2026-08-20T15:26:46.321Z",
+    "updated_at": "2026-08-20T15:26:46.321Z",
+    "visibility": "organization_members_only",
+    "options": [
+      {
+        "id": 80258508,
+        "name": "APP - PORTAL",
+        "description": null,
+        "color": "blue",
+        "priority": 2,
+        "created_at": "2026-08-20T15:26:46.366Z",
+        "updated_at": "2026-08-20T15:26:46.366Z"
+      },
+      {
+        "id": 80258510,
+        "name": "IA",
+        "description": null,
+        "color": "green",
+        "priority": 4,
+        "created_at": "2026-08-20T15:26:46.394Z",
+        "updated_at": "2026-08-20T15:26:46.394Z"
+      },
+      {
+        "id": 80258507,
+        "name": "RPA",
+        "description": null,
+        "color": "yellow",
+        "priority": 1,
+        "created_at": "2026-08-20T15:26:46.353Z",
+        "updated_at": "2026-08-20T15:26:46.353Z"
+      },
+      {
+        "id": 80258506,
+        "name": "SGI",
+        "description": null,
+        "color": "purple",
+        "priority": 0,
+        "created_at": "2026-08-20T15:26:46.338Z",
+        "updated_at": "2026-08-20T15:26:46.338Z"
+      },
+      {
+        "id": 80258509,
+        "name": "VX 360",
+        "description": null,
+        "color": "pink",
+        "priority": 3,
+        "created_at": "2026-08-20T15:26:46.379Z",
+        "updated_at": "2026-08-20T15:26:46.379Z"
+      }
+    ]
+  }
+}
