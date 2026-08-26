@@ -1,4 +1,4 @@
-name: Sync OS-Sistemas governance
+name: Migrate OS-Sistemas governance
 
 on:
   push:
@@ -6,67 +6,52 @@ on:
       - main
     paths:
       - '.github/workflows/sync-os-sistemas-governance.yml'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - '.github/governance-sync-trigger'
+      - '.github/governance/projects-source.json'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  sync:
+  migrate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
-      - name: Generate source GitHub App token
-        id: source-token
-        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547
-        with:
-          app-id: ${{ vars.PROJECTS_APP_ID }}
-          private-key: ${{ secrets.PROJECTS_APP_PRIVATE_KEY }}
-          owner: OS-Sistemas
-
-      - name: Generate target GitHub App token
+      - name: Generate Ouro Safra GitHub App token
         id: target-token
         uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547
         with:
-          app-id: ${{ vars.PROJECTS_APP_ID }}
+          app-id: 4731476
           private-key: ${{ secrets.PROJECTS_APP_PRIVATE_KEY }}
           owner: ourosafra
 
-      - name: Synchronize organization governance
+      - name: Recreate organization Projects
         shell: bash
         env:
-          SOURCE_TOKEN: ${{ steps.source-token.outputs.token }}
           TARGET_TOKEN: ${{ steps.target-token.outputs.token }}
         run: |
           node <<'NODE'
-          const fs = require('node:fs');
+          import fs from 'node:fs';
 
-          const SOURCE_ORG = 'OS-Sistemas';
           const TARGET_ORG = 'ourosafra';
           const API_VERSION = '2026-03-10';
-          const sourceToken = process.env.SOURCE_TOKEN;
-          const targetToken = process.env.TARGET_TOKEN;
+          const token = process.env.TARGET_TOKEN;
+          const manifest = JSON.parse(
+            fs.readFileSync('.github/governance/projects-source.json', 'utf8'),
+          );
 
           const result = {
             generatedAt: new Date().toISOString(),
-            sourceOrganization: SOURCE_ORG,
+            sourceOrganization: manifest.sourceOrganization,
             targetOrganization: TARGET_ORG,
-            issueTypes: { created: [], updated: [], skipped: [], errors: [] },
             projects: { created: [], updated: [], errors: [], warnings: [] },
           };
 
-          async function request(token, url, options = {}) {
+          async function request(url, options = {}) {
             const response = await fetch(url, {
               ...options,
               headers: {
@@ -77,131 +62,294 @@ jobs:
                 ...(options.headers || {}),
               },
             });
+
             const text = await response.text();
             let data = null;
             if (text) {
               try { data = JSON.parse(text); } catch { data = text; }
             }
+
             if (!response.ok) {
               throw new Error(`${response.status} ${url}: ${JSON.stringify(data)}`);
             }
+
             return data;
           }
 
-          async function graphql(token, query, variables = {}) {
-            const data = await request(token, 'https://api.github.com/graphql', {
+          async function graphql(query, variables = {}) {
+            const payload = await request('https://api.github.com/graphql', {
               method: 'POST',
               body: JSON.stringify({ query, variables }),
             });
-            if (data.errors?.length) throw new Error(JSON.stringify(data.errors));
-            return data.data;
+
+            if (payload.errors?.length) {
+              throw new Error(JSON.stringify(payload.errors));
+            }
+
+            return payload.data;
           }
 
-          async function syncIssueTypes() {
-            try {
-              const sourceTypes = await request(sourceToken, `https://api.github.com/orgs/${SOURCE_ORG}/issue-types`);
-              const targetTypes = await request(targetToken, `https://api.github.com/orgs/${TARGET_ORG}/issue-types`);
-              const targetByName = new Map(targetTypes.map(x => [x.name.toLowerCase(), x]));
-              for (const source of sourceTypes) {
-                const current = targetByName.get(source.name.toLowerCase());
-                const payload = { name: source.name, description: source.description ?? null, is_enabled: source.is_enabled ?? true, color: source.color ?? null };
-                try {
-                  if (!current) {
-                    await request(targetToken, `https://api.github.com/orgs/${TARGET_ORG}/issue-types`, { method: 'POST', body: JSON.stringify(payload) });
-                    result.issueTypes.created.push(source.name);
-                  } else {
-                    await request(targetToken, `https://api.github.com/orgs/${TARGET_ORG}/issue-types/${current.id}`, { method: 'PUT', body: JSON.stringify(payload) });
-                    result.issueTypes.updated.push(source.name);
+          async function getOrganization() {
+            return graphql(`
+              query Organization($login: String!) {
+                organization(login: $login) {
+                  id
+                  projectsV2(first: 100) {
+                    nodes { id number title }
                   }
-                } catch (error) {
-                  result.issueTypes.errors.push({ name: source.name, error: String(error.message || error) });
                 }
               }
-            } catch (error) {
-              result.issueTypes.errors.push({ scope: 'issue-types', error: String(error.message || error) });
-            }
+            `, { login: TARGET_ORG });
           }
 
-          const projectsQuery = `query Projects($login:String!){organization(login:$login){id projectsV2(first:100){nodes{id number title shortDescription readme public closed fields(first:100){nodes{__typename ... on ProjectV2Field{id name dataType} ... on ProjectV2SingleSelectField{id name dataType options{name description color}} ... on ProjectV2MultiSelectField{id name dataType multiSelectOptions{name description color}} ... on ProjectV2IterationField{id name dataType}}} views(first:100){nodes{id name layout filter fields(first:100){nodes{... on ProjectV2Field{id name} ... on ProjectV2SingleSelectField{id name} ... on ProjectV2MultiSelectField{id name} ... on ProjectV2IterationField{id name}}} groupByFields(first:20){nodes{... on ProjectV2Field{name} ... on ProjectV2SingleSelectField{name} ... on ProjectV2MultiSelectField{name} ... on ProjectV2IterationField{name}}} verticalGroupByFields(first:20){nodes{... on ProjectV2Field{name} ... on ProjectV2SingleSelectField{name} ... on ProjectV2MultiSelectField{name} ... on ProjectV2IterationField{name}}} sortByFields(first:20){nodes{direction field{... on ProjectV2Field{name} ... on ProjectV2SingleSelectField{name} ... on ProjectV2MultiSelectField{name} ... on ProjectV2IterationField{name}}}}}}}}}`;
+          async function getProject(projectId) {
+            const data = await graphql(`
+              query Project($id: ID!) {
+                node(id: $id) {
+                  ... on ProjectV2 {
+                    id
+                    number
+                    title
+                    fields(first: 100) {
+                      nodes {
+                        __typename
+                        ... on ProjectV2Field { id name dataType }
+                        ... on ProjectV2SingleSelectField { id name dataType }
+                        ... on ProjectV2MultiSelectField { id name dataType }
+                        ... on ProjectV2IterationField { id name dataType }
+                      }
+                    }
+                    views(first: 100) {
+                      nodes { id name layout filter }
+                    }
+                  }
+                }
+              }
+            `, { id: projectId });
+            return data.node;
+          }
 
           async function createField(projectId, field) {
-            const common = { projectId, name: field.name, dataType: field.dataType };
-            if (['TEXT','NUMBER','DATE'].includes(field.dataType)) {
-              return graphql(targetToken, `mutation($input:CreateProjectV2FieldInput!){createProjectV2Field(input:$input){projectV2Field{... on ProjectV2Field{id name}}}}`, { input: common });
-            }
-            if (field.dataType === 'SINGLE_SELECT') {
-              common.singleSelectOptions = (field.options || []).map(x => ({name:x.name,description:x.description || '',color:x.color}));
-              return graphql(targetToken, `mutation($input:CreateProjectV2FieldInput!){createProjectV2Field(input:$input){projectV2Field{... on ProjectV2SingleSelectField{id name}}}}`, { input: common });
-            }
-            if (field.dataType === 'MULTI_SELECT') {
-              common.multiSelectOptions = (field.multiSelectOptions || []).map(x => ({name:x.name,description:x.description || '',color:x.color}));
-              return graphql(targetToken, `mutation($input:CreateProjectV2FieldInput!){createProjectV2Field(input:$input){projectV2Field{... on ProjectV2MultiSelectField{id name}}}}`, { input: common });
-            }
-            throw new Error(`Unsupported field type for automatic recreation: ${field.dataType}`);
-          }
+            const input = {
+              projectId,
+              name: field.name,
+              dataType: field.dataType,
+            };
 
-          async function syncProjects() {
-            try {
-              const sourceData = await graphql(sourceToken, projectsQuery, {login:SOURCE_ORG});
-              let targetData = await graphql(targetToken, projectsQuery, {login:TARGET_ORG});
-              const targetOwnerId = targetData.organization.id;
-              const targetByTitle = new Map(targetData.organization.projectsV2.nodes.map(x => [x.title,x]));
-              for (const source of sourceData.organization.projectsV2.nodes) {
-                try {
-                  let target = targetByTitle.get(source.title);
-                  let created = false;
-                  if (!target) {
-                    const createdData = await graphql(targetToken, `mutation($ownerId:ID!,$title:String!){createProjectV2(input:{ownerId:$ownerId,title:$title}){projectV2{id number title}}}`, {ownerId:targetOwnerId,title:source.title});
-                    target = createdData.createProjectV2.projectV2;
-                    created = true;
-                    result.projects.created.push({title:source.title,number:target.number});
+            if (field.dataType === 'SINGLE_SELECT' && field.options?.length) {
+              input.singleSelectOptions = field.options.map(option => ({
+                name: option.name,
+                description: option.description || '',
+                color: option.color,
+              }));
+            }
+
+            const data = await graphql(`
+              mutation CreateField($input: CreateProjectV2FieldInput!) {
+                createProjectV2Field(input: $input) {
+                  projectV2Field {
+                    ... on ProjectV2Field { id name }
+                    ... on ProjectV2SingleSelectField { id name }
+                    ... on ProjectV2MultiSelectField { id name }
+                    ... on ProjectV2IterationField { id name }
                   }
-                  await graphql(targetToken, `mutation($id:ID!,$shortDescription:String,$readme:String,$public:Boolean,$closed:Boolean){updateProjectV2(input:{projectId:$id,shortDescription:$shortDescription,readme:$readme,public:$public,closed:$closed}){projectV2{id}}}`, {id:target.id,shortDescription:source.shortDescription || '',readme:source.readme || '',public:source.public,closed:source.closed});
-                  targetData = await graphql(targetToken, projectsQuery, {login:TARGET_ORG});
-                  target = targetData.organization.projectsV2.nodes.find(x => x.title === source.title);
-                  const targetFieldByName = new Map((target.fields?.nodes || []).filter(Boolean).map(x => [x.name,x]));
-                  const builtIns = new Set(['Title','Assignees','Status','Labels','Milestone','Repository','Reviewers','Linked pull requests','Tracks','Tracked by','Issue Type','Parent issue','Sub-issues progress']);
-                  for (const field of (source.fields?.nodes || []).filter(Boolean)) {
-                    if (!field.name || builtIns.has(field.name) || targetFieldByName.has(field.name)) continue;
-                    try { await createField(target.id, field); } catch (error) { result.projects.warnings.push({project:source.title,field:field.name,error:String(error.message || error)}); }
-                  }
-                  targetData = await graphql(targetToken, projectsQuery, {login:TARGET_ORG});
-                  target = targetData.organization.projectsV2.nodes.find(x => x.title === source.title);
-                  const freshFieldByName = new Map((target.fields?.nodes || []).filter(Boolean).map(x => [x.name,x]));
-                  const targetViewByName = new Map((target.views?.nodes || []).map(x => [x.name,x]));
-                  for (const view of source.views?.nodes || []) {
-                    const visibleFieldIds = (view.fields?.nodes || []).map(x => freshFieldByName.get(x?.name)?.id).filter(Boolean);
-                    let targetView = targetViewByName.get(view.name);
-                    try {
-                      if (!targetView) {
-                        const data = await graphql(targetToken, `mutation($input:CreateProjectV2ViewInput!){createProjectV2View(input:$input){projectV2View{id name}}}`, {input:{projectId:target.id,name:view.name,layout:view.layout,configuration:{visibleFieldIds}}});
-                        targetView = data.createProjectV2View.projectV2View;
-                      }
-                      await graphql(targetToken, `mutation($input:UpdateProjectV2ViewInput!){updateProjectV2View(input:$input){projectV2View{id}}}`, {input:{viewId:targetView.id,name:view.name,layout:view.layout,filter:view.filter || '',configuration:{visibleFieldIds}}});
-                      const grouped = (view.groupByFields?.nodes || []).map(x => x?.name).filter(Boolean);
-                      const vertical = (view.verticalGroupByFields?.nodes || []).map(x => x?.name).filter(Boolean);
-                      const sorted = (view.sortByFields?.nodes || []).map(x => ({field:x?.field?.name,direction:x?.direction})).filter(x => x.field);
-                      if (grouped.length || vertical.length || sorted.length) result.projects.warnings.push({project:source.title,view:view.name,note:'Group/sort config is readable but not fully writable through current ProjectV2 view API.',groupBy:grouped,verticalGroupBy:vertical,sortBy:sorted});
-                    } catch (error) { result.projects.warnings.push({project:source.title,view:view.name,error:String(error.message || error)}); }
-                  }
-                  if (!created) result.projects.updated.push({title:source.title,number:target.number});
-                } catch (error) { result.projects.errors.push({project:source.title,error:String(error.message || error)}); }
+                }
               }
-            } catch (error) { result.projects.errors.push({scope:'projects',error:String(error.message || error)}); }
+            `, { input });
+
+            return data.createProjectV2Field.projectV2Field;
           }
 
-          (async()=>{await syncIssueTypes();await syncProjects();fs.writeFileSync('governance-sync-result.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));})().catch(error=>{result.fatal=String(error.stack || error);fs.writeFileSync('governance-sync-result.json',JSON.stringify(result,null,2)+'\n');console.error(error);});
+          let organization = (await getOrganization()).organization;
+          const targetByTitle = new Map(
+            organization.projectsV2.nodes.map(project => [project.title, project]),
+          );
+
+          for (const source of manifest.projects) {
+            try {
+              let target = targetByTitle.get(source.title);
+              let created = false;
+
+              if (!target) {
+                const createData = await graphql(`
+                  mutation CreateProject($ownerId: ID!, $title: String!) {
+                    createProjectV2(input: { ownerId: $ownerId, title: $title }) {
+                      projectV2 { id number title }
+                    }
+                  }
+                `, {
+                  ownerId: organization.id,
+                  title: source.title,
+                });
+
+                target = createData.createProjectV2.projectV2;
+                targetByTitle.set(target.title, target);
+                created = true;
+                result.projects.created.push({
+                  sourceNumber: source.number,
+                  targetNumber: target.number,
+                  title: target.title,
+                });
+              }
+
+              await graphql(`
+                mutation UpdateProject($input: UpdateProjectV2Input!) {
+                  updateProjectV2(input: $input) {
+                    projectV2 { id }
+                  }
+                }
+              `, {
+                input: {
+                  projectId: target.id,
+                  shortDescription: source.shortDescription || '',
+                  readme: source.readme || '',
+                  public: Boolean(source.public),
+                  closed: Boolean(source.closed),
+                },
+              });
+
+              let detail = await getProject(target.id);
+              let fieldByName = new Map(
+                (detail.fields?.nodes || [])
+                  .filter(Boolean)
+                  .map(field => [field.name, field]),
+              );
+
+              for (const field of source.fields || []) {
+                if (fieldByName.has(field.name)) continue;
+
+                try {
+                  if (!['TEXT', 'NUMBER', 'DATE', 'SINGLE_SELECT'].includes(field.dataType)) {
+                    throw new Error(`Unsupported automatic field type: ${field.dataType}`);
+                  }
+
+                  await createField(target.id, field);
+                } catch (error) {
+                  result.projects.warnings.push({
+                    project: source.title,
+                    field: field.name,
+                    error: String(error.message || error),
+                  });
+                }
+              }
+
+              detail = await getProject(target.id);
+              fieldByName = new Map(
+                (detail.fields?.nodes || [])
+                  .filter(Boolean)
+                  .map(field => [field.name, field]),
+              );
+              const viewByName = new Map(
+                (detail.views?.nodes || []).map(view => [view.name, view]),
+              );
+
+              for (const sourceView of source.views || []) {
+                const visibleFieldIds = (sourceView.fields || [])
+                  .map(name => fieldByName.get(name)?.id)
+                  .filter(Boolean);
+
+                try {
+                  let targetView = viewByName.get(sourceView.name);
+
+                  if (!targetView) {
+                    const viewData = await graphql(`
+                      mutation CreateView($input: CreateProjectV2ViewInput!) {
+                        createProjectV2View(input: $input) {
+                          projectV2View { id name }
+                        }
+                      }
+                    `, {
+                      input: {
+                        projectId: target.id,
+                        name: sourceView.name,
+                        layout: sourceView.layout,
+                        configuration: { visibleFieldIds },
+                      },
+                    });
+                    targetView = viewData.createProjectV2View.projectV2View;
+                    viewByName.set(targetView.name, targetView);
+                  }
+
+                  await graphql(`
+                    mutation UpdateView($input: UpdateProjectV2ViewInput!) {
+                      updateProjectV2View(input: $input) {
+                        projectV2View { id }
+                      }
+                    }
+                  `, {
+                    input: {
+                      viewId: targetView.id,
+                      name: sourceView.name,
+                      layout: sourceView.layout,
+                      filter: sourceView.filter || '',
+                      configuration: { visibleFieldIds },
+                    },
+                  });
+                } catch (error) {
+                  result.projects.warnings.push({
+                    project: source.title,
+                    view: sourceView.name,
+                    error: String(error.message || error),
+                  });
+                }
+              }
+
+              if (source.title.startsWith('[TEMPLATE]')) {
+                try {
+                  await graphql(`
+                    mutation MarkTemplate($projectId: ID!) {
+                      markProjectV2AsTemplate(input: { projectId: $projectId }) {
+                        projectV2 { id }
+                      }
+                    }
+                  `, { projectId: target.id });
+                } catch (error) {
+                  result.projects.warnings.push({
+                    project: source.title,
+                    operation: 'mark-template',
+                    error: String(error.message || error),
+                  });
+                }
+              }
+
+              if (!created) {
+                result.projects.updated.push({
+                  sourceNumber: source.number,
+                  targetNumber: target.number,
+                  title: target.title,
+                });
+              }
+            } catch (error) {
+              result.projects.errors.push({
+                project: source.title,
+                error: String(error.message || error),
+              });
+            }
+          }
+
+          fs.writeFileSync(
+            'governance-sync-result.json',
+            JSON.stringify(result, null, 2) + '\n',
+          );
+          console.log(JSON.stringify(result, null, 2));
+
+          if (result.projects.errors.length) {
+            process.exitCode = 1;
+          }
           NODE
 
       - name: Commit synchronization result
-        if: github.event_name != 'pull_request'
+        if: always()
         shell: bash
         run: |
+          if [ ! -f governance-sync-result.json ]; then
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add governance-sync-result.json
           git diff --cached --quiet && exit 0
-          git commit -m "chore: record governance synchronization result"
+          git commit -m "chore: record governance migration result"
           git push
 
       - name: Upload synchronization result
