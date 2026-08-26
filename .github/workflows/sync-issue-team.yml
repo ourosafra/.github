@@ -1,0 +1,46 @@
+name: Sync issue Team field
+
+on:
+  workflow_call:
+    inputs:
+      issue_number:
+        required: true
+        type: number
+      repository:
+        required: true
+        type: string
+    secrets:
+      projects_app_private_key:
+        required: true
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  sync-team:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Generate GitHub App token
+        id: token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547
+        with:
+          app-id: 4731476
+          private-key: ${{ secrets.projects_app_private_key }}
+          owner: ourosafra
+
+      - name: Checkout automation repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: ourosafra/.github
+          ref: main
+          path: automation
+          token: ${{ steps.token.outputs.token }}
+
+      - name: Synchronize Team
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+          REPOSITORY: ${{ inputs.repository }}
+        run: node automation/scripts/sync-issue-team.js
