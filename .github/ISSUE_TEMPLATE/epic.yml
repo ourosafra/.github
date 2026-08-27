@@ -11,7 +11,7 @@ body:
         - VX 360
         - RPA
         - SGI
-        - Dados
+        - OS App
     validations:
       required: true
   - type: textarea
