@@ -1,17 +1,13 @@
 {
-  "generatedAt": "2026-08-26T22:13:36.360Z",
+  "generatedAt": "2026-08-27T13:24:04.888Z",
   "issueTypes": {
-    "created": [
-      {
-        "name": "Problem",
-        "id": 850089004
-      }
-    ],
+    "created": [],
     "existing": [
       "Bug",
       "Epic",
       "Feature",
       "Incident",
+      "Problem",
       "Security",
       "Spike",
       "Task",
