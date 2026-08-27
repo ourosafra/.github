@@ -40,10 +40,11 @@ jobs:
           const token = process.env.GH_APP_TOKEN;
           const org = 'ourosafra';
           const apiVersion = '2026-03-10';
+          const desiredTeams = ['VX 360', 'RPA', 'SGI', 'OS App'];
           const result = {
             generatedAt: new Date().toISOString(),
             issueTypes: { created: [], existing: [], errors: [] },
-            issueFields: { created: [], existing: [], errors: [], warnings: [] },
+            issueFields: { created: [], updated: [], existing: [], errors: [], warnings: [] },
           };
 
           async function request(endpoint, options = {}) {
@@ -113,9 +114,55 @@ jobs:
             const fields = await request(`/orgs/${org}/issue-fields`);
             const team = fields.find(field => field.name.toLowerCase() === 'team');
             if (team) {
-              result.issueFields.existing.push({ name: team.name, id: team.id });
+              const currentOptions = Array.isArray(team.options) ? team.options : [];
+              const currentByName = new Map(currentOptions.map(option => [option.name, option]));
+              const dados = currentByName.get('Dados');
+              const desiredOptions = desiredTeams.map((name, index) => {
+                const existing = currentByName.get(name);
+                if (existing) {
+                  return {
+                    id: existing.id,
+                    name,
+                    description: existing.description ?? null,
+                    color: existing.color || 'gray',
+                    priority: index + 1,
+                  };
+                }
+                if (name === 'OS App' && dados) {
+                  return {
+                    id: dados.id,
+                    name: 'OS App',
+                    description: dados.description ?? null,
+                    color: dados.color || 'gray',
+                    priority: index + 1,
+                  };
+                }
+                return {
+                  name,
+                  description: null,
+                  color: 'gray',
+                  priority: index + 1,
+                };
+              });
+
+              const sameNames = currentOptions.length === desiredOptions.length
+                && currentOptions.map(option => option.name).join('|') === desiredTeams.join('|');
+
+              if (sameNames) {
+                result.issueFields.existing.push({ name: team.name, id: team.id });
+              } else {
+                const updated = await request(`/orgs/${org}/issue-fields/${team.id}`, {
+                  method: 'PATCH',
+                  body: JSON.stringify({ options: desiredOptions }),
+                });
+                result.issueFields.updated.push({
+                  name: updated.name,
+                  id: updated.id,
+                  options: updated.options?.map(option => option.name) || [],
+                });
+              }
             } else {
-              const options = ['VX 360', 'RPA', 'SGI', 'Dados'].map((name, index) => ({
+              const options = desiredTeams.map((name, index) => ({
                 name,
                 description: null,
                 color: 'gray',
@@ -132,7 +179,6 @@ jobs:
                 }),
               });
               result.issueFields.created.push({ name: created.name, id: created.id });
-              result.issueFields.warnings.push('As cores das opções de Team não puderam ser lidas do OS-Sistemas; foram criadas como gray sem alterar os nomes das opções.');
             }
           } catch (error) {
             result.issueFields.errors.push({ scope: 'Team', error: String(error.message || error) });
