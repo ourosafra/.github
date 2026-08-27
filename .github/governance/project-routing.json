@@ -4,7 +4,7 @@
     "portfolio": { "number": 9 },
     "deliveryDev": { "number": 15 },
     "deliveryRpa": { "number": 14 },
-    "deliveryDados": { "number": 13 },
+    "deliveryOsApp": { "number": 16 },
     "incidents": { "number": 12 }
   },
   "routing": {
@@ -12,7 +12,7 @@
       "VX 360": ["deliveryRpa"],
       "RPA": ["deliveryRpa"],
       "SGI": ["deliveryDev"],
-      "Dados": ["deliveryDados"]
+      "OS App": ["deliveryOsApp"]
     },
     "types": {
       "Epic": ["portfolio"],
