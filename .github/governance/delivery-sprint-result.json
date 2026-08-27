@@ -1,0 +1,223 @@
+{
+  "generatedAt": "2026-08-27T13:38:30.081Z",
+  "created": [
+    {
+      "number": 10,
+      "title": "Delivery - SGI",
+      "closed": false,
+      "sprint": {
+        "id": "PVTIF_lADOBMOpus4BhVGzzhgkZbA",
+        "name": "Sprint",
+        "dataType": "ITERATION",
+        "configuration": {
+          "duration": 14,
+          "startDay": 1,
+          "iterations": [
+            {
+              "id": "2a3e526a",
+              "title": "Sprint 3",
+              "startDate": "2026-08-22",
+              "duration": 14
+            },
+            {
+              "id": "933f6f71",
+              "title": "Sprint 4",
+              "startDate": "2026-09-05",
+              "duration": 14
+            },
+            {
+              "id": "d15c70fc",
+              "title": "Sprint 5",
+              "startDate": "2026-09-19",
+              "duration": 14
+            },
+            {
+              "id": "532069e5",
+              "title": "Sprint 6",
+              "startDate": "2026-10-03",
+              "duration": 14
+            }
+          ],
+          "completedIterations": [
+            {
+              "id": "3a209beb",
+              "title": "Sprint 2",
+              "startDate": "2026-08-08",
+              "duration": 14
+            },
+            {
+              "id": "8f5dfe27",
+              "title": "Sprint 1",
+              "startDate": "2026-08-03",
+              "duration": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "number": 14,
+      "title": "Delivery - RPA & VX",
+      "closed": false,
+      "sprint": {
+        "id": "PVTIF_lADOBMOpus4BhlLCzhgkZbE",
+        "name": "Sprint",
+        "dataType": "ITERATION",
+        "configuration": {
+          "duration": 14,
+          "startDay": 1,
+          "iterations": [
+            {
+              "id": "c8b226ca",
+              "title": "Sprint 3",
+              "startDate": "2026-08-22",
+              "duration": 14
+            },
+            {
+              "id": "fe28406c",
+              "title": "Sprint 4",
+              "startDate": "2026-09-05",
+              "duration": 14
+            },
+            {
+              "id": "d9eed227",
+              "title": "Sprint 5",
+              "startDate": "2026-09-19",
+              "duration": 14
+            },
+            {
+              "id": "2320d384",
+              "title": "Sprint 6",
+              "startDate": "2026-10-03",
+              "duration": 14
+            }
+          ],
+          "completedIterations": [
+            {
+              "id": "45c03cf5",
+              "title": "Sprint 2",
+              "startDate": "2026-08-08",
+              "duration": 14
+            },
+            {
+              "id": "2d2b7a56",
+              "title": "Sprint 1",
+              "startDate": "2026-08-03",
+              "duration": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "number": 15,
+      "title": "Delivery - Dev & SGI",
+      "closed": true,
+      "sprint": {
+        "id": "PVTIF_lADOBMOpus4BhlLDzhgkZbI",
+        "name": "Sprint",
+        "dataType": "ITERATION",
+        "configuration": {
+          "duration": 14,
+          "startDay": 1,
+          "iterations": [
+            {
+              "id": "16aa249b",
+              "title": "Sprint 3",
+              "startDate": "2026-08-22",
+              "duration": 14
+            },
+            {
+              "id": "006c9402",
+              "title": "Sprint 4",
+              "startDate": "2026-09-05",
+              "duration": 14
+            },
+            {
+              "id": "28a99e85",
+              "title": "Sprint 5",
+              "startDate": "2026-09-19",
+              "duration": 14
+            },
+            {
+              "id": "10bea0f4",
+              "title": "Sprint 6",
+              "startDate": "2026-10-03",
+              "duration": 14
+            }
+          ],
+          "completedIterations": [
+            {
+              "id": "a192e791",
+              "title": "Sprint 2",
+              "startDate": "2026-08-08",
+              "duration": 14
+            },
+            {
+              "id": "714bfdd7",
+              "title": "Sprint 1",
+              "startDate": "2026-08-03",
+              "duration": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "number": 16,
+      "title": "Delivery - OS App",
+      "closed": false,
+      "sprint": {
+        "id": "PVTIF_lADOBMOpus4BhonAzhgkZbM",
+        "name": "Sprint",
+        "dataType": "ITERATION",
+        "configuration": {
+          "duration": 14,
+          "startDay": 1,
+          "iterations": [
+            {
+              "id": "b05d2aef",
+              "title": "Sprint 3",
+              "startDate": "2026-08-22",
+              "duration": 14
+            },
+            {
+              "id": "5dffb366",
+              "title": "Sprint 4",
+              "startDate": "2026-09-05",
+              "duration": 14
+            },
+            {
+              "id": "96c64e7f",
+              "title": "Sprint 5",
+              "startDate": "2026-09-19",
+              "duration": 14
+            },
+            {
+              "id": "5857a9c3",
+              "title": "Sprint 6",
+              "startDate": "2026-10-03",
+              "duration": 14
+            }
+          ],
+          "completedIterations": [
+            {
+              "id": "05776b5c",
+              "title": "Sprint 2",
+              "startDate": "2026-08-08",
+              "duration": 14
+            },
+            {
+              "id": "f17e04c8",
+              "title": "Sprint 1",
+              "startDate": "2026-08-03",
+              "duration": 5
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "existing": [],
+  "errors": []
+}
