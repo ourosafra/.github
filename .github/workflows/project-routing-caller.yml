@@ -1,0 +1,27 @@
+name: Project routing
+
+on:
+  issues:
+    types:
+      - opened
+      - typed
+      - field_added
+      - field_removed
+
+concurrency:
+  group: project-routing-${{ github.repository }}-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  route-issue:
+    name: Route issue to organization projects
+
+    uses: ourosafra/.github/.github/workflows/route-issue-projects.yml@main
+
+    with:
+      issue_number: ${{ github.event.issue.number }}
+      repository: ${{ github.repository }}
+      event_action: ${{ github.event.action }}
+
+    secrets:
+      projects_app_private_key: ${{ secrets.PROJECTS_APP_PRIVATE_KEY }}
