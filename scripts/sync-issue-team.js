@@ -1,7 +1,7 @@
 const API_URL = 'https://api.github.com';
 const API_VERSION = '2026-03-10';
 const TEAM_HEADING = 'Equipe';
-const ALLOWED_TEAMS = new Set(['VX 360', 'RPA', 'SGI', 'Dados']);
+const ALLOWED_TEAMS = new Set(['VX 360', 'RPA', 'SGI', 'OS App']);
 
 function required(name) {
   const value = process.env[name]?.trim();
