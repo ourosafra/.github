@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-27T13:24:04.888Z",
+  "generatedAt": "2026-08-27T13:24:47.036Z",
   "issueTypes": {
     "created": [],
     "existing": [
@@ -17,12 +17,19 @@
   },
   "issueFields": {
     "created": [],
-    "existing": [
+    "updated": [
       {
         "name": "Team",
-        "id": 45853834
+        "id": 45853834,
+        "options": [
+          "OS App",
+          "RPA",
+          "SGI",
+          "VX 360"
+        ]
       }
     ],
+    "existing": [],
     "errors": [],
     "warnings": []
   }
