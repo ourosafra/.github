@@ -1,0 +1,162 @@
+name: Add Sprint to Delivery Projects
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-delivery-sprint.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Generate Ouro Safra GitHub App token
+        id: token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547
+        with:
+          app-id: 4731476
+          private-key: ${{ secrets.PROJECTS_APP_PRIVATE_KEY }}
+          owner: ourosafra
+
+      - name: Add Sprint iteration field
+        env:
+          GH_APP_TOKEN: ${{ steps.token.outputs.token }}
+        shell: bash
+        run: |
+          node <<'NODE'
+          import fs from 'node:fs';
+
+          const token = process.env.GH_APP_TOKEN;
+          const org = 'ourosafra';
+          const targetNumbers = [10, 14, 15, 16];
+          const iterationConfiguration = {
+            duration: 14,
+            startDate: '2026-08-03',
+            iterations: [
+              { title: 'Sprint 1', startDate: '2026-08-03', duration: 5 },
+              { title: 'Sprint 2', startDate: '2026-08-08', duration: 14 },
+              { title: 'Sprint 3', startDate: '2026-08-22', duration: 14 },
+              { title: 'Sprint 4', startDate: '2026-09-05', duration: 14 },
+              { title: 'Sprint 5', startDate: '2026-09-19', duration: 14 },
+              { title: 'Sprint 6', startDate: '2026-10-03', duration: 14 },
+            ],
+          };
+
+          async function graphql(query, variables = {}) {
+            const response = await fetch('https://api.github.com/graphql', {
+              method: 'POST',
+              headers: {
+                Accept: 'application/vnd.github+json',
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'X-GitHub-Api-Version': '2026-03-10',
+              },
+              body: JSON.stringify({ query, variables }),
+            });
+            const payload = await response.json();
+            if (!response.ok || payload.errors?.length) {
+              throw new Error(JSON.stringify(payload.errors || payload));
+            }
+            return payload.data;
+          }
+
+          const list = await graphql(`
+            query($login:String!) {
+              organization(login:$login) {
+                projectsV2(first:100) {
+                  nodes {
+                    id number title closed
+                    fields(first:100) {
+                      nodes {
+                        __typename
+                        ... on ProjectV2IterationField {
+                          id name dataType
+                          configuration {
+                            duration startDay
+                            iterations { id title startDate duration }
+                            completedIterations { id title startDate duration }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          `, { login: org });
+
+          const result = { generatedAt: new Date().toISOString(), created: [], existing: [], errors: [] };
+
+          for (const number of targetNumbers) {
+            const project = list.organization.projectsV2.nodes.find(p => p.number === number);
+            if (!project) {
+              result.errors.push({ number, error: 'Project not found' });
+              continue;
+            }
+
+            const existing = project.fields.nodes.find(field => field?.__typename === 'ProjectV2IterationField' && field.name === 'Sprint');
+            if (existing) {
+              result.existing.push({ number, title: project.title, sprint: existing });
+              continue;
+            }
+
+            try {
+              const data = await graphql(`
+                mutation($projectId:ID!,$configuration:ProjectV2IterationFieldConfigurationInput!) {
+                  createProjectV2Field(input:{
+                    projectId:$projectId,
+                    name:"Sprint",
+                    dataType:ITERATION,
+                    iterationConfiguration:$configuration
+                  }) {
+                    projectV2Field {
+                      ... on ProjectV2IterationField {
+                        id name dataType
+                        configuration {
+                          duration startDay
+                          iterations { id title startDate duration }
+                          completedIterations { id title startDate duration }
+                        }
+                      }
+                    }
+                  }
+                }
+              `, { projectId: project.id, configuration: iterationConfiguration });
+
+              result.created.push({
+                number,
+                title: project.title,
+                closed: project.closed,
+                sprint: data.createProjectV2Field.projectV2Field,
+              });
+            } catch (error) {
+              result.errors.push({ number, title: project.title, closed: project.closed, error: String(error.message || error) });
+            }
+          }
+
+          fs.mkdirSync('.github/governance', { recursive: true });
+          fs.writeFileSync('.github/governance/delivery-sprint-result.json', JSON.stringify(result, null, 2) + '\n');
+          console.log(JSON.stringify(result, null, 2));
+          if (result.errors.length) process.exitCode = 1;
+          NODE
+
+      - name: Commit Sprint result
+        if: always()
+        shell: bash
+        run: |
+          if [ ! -f .github/governance/delivery-sprint-result.json ]; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/governance/delivery-sprint-result.json
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: record Delivery Sprint configuration"
+          git push
