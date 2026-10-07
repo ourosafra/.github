@@ -25,6 +25,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Wait for issue metadata stabilization
+        if: ${{ inputs.event_action != 'manual' }}
+        shell: bash
+        run: |
+          echo "Workflow triggered by action: ${{ inputs.event_action }}"
+          echo "Waiting for GitHub Issue metadata to stabilize..."
+          sleep 15
+
       - name: Generate GitHub App token
         id: token
         uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547
