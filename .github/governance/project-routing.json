@@ -1,13 +1,26 @@
 {
   "organization": "ourosafra",
   "projects": {
-    "portfolio": { "number": 9 },
+    "portfolio": { "title": "Portfolio de Tecnologia" },
+    "deliveryFrontend": { "title": "Delivery - Frontend" },
+    "deliveryBackend": { "title": "Delivery - Backend" },
     "deliveryDev": { "number": 15 },
     "deliveryRpa": { "number": 14 },
     "deliveryOsApp": { "number": 16 },
     "incidents": { "number": 12 }
   },
   "routing": {
+    "exclusiveTypes": {
+      "Epic": ["portfolio"]
+    },
+    "repositories": {
+      "Mobile": ["deliveryFrontend"]
+    },
+    "repositorySuffixes": {
+      "-frontend": ["deliveryFrontend"],
+      "-backend": ["deliveryBackend"],
+      "-job": ["deliveryBackend"]
+    },
     "teams": {
       "VX 360": ["deliveryRpa"],
       "RPA": ["deliveryRpa"],
@@ -15,7 +28,6 @@
       "OS App": ["deliveryOsApp"]
     },
     "types": {
-      "Epic": ["portfolio"],
       "Incident": ["incidents"],
       "Problem": ["incidents"]
     }
