@@ -44,6 +44,36 @@ function config() {
   return JSON.parse(fs.readFileSync(path.resolve(__dirname, '../.github/governance/project-routing.json'), 'utf8'));
 }
 
+function calculateDesiredProjectKeys(cfg, issueType, team, repositoryName) {
+  const exclusive = cfg.routing.exclusiveTypes?.[issueType];
+  if (Array.isArray(exclusive) && exclusive.length) {
+    return new Set(exclusive);
+  }
+
+  const desired = new Set();
+  const exactRepositoryProjects = cfg.routing.repositories?.[repositoryName] || [];
+
+  for (const key of exactRepositoryProjects) {
+    desired.add(key);
+  }
+
+  for (const [suffix, projectKeys] of Object.entries(cfg.routing.repositorySuffixes || {})) {
+    if (repositoryName.toLowerCase().endsWith(suffix.toLowerCase())) {
+      for (const key of projectKeys) desired.add(key);
+    }
+  }
+
+  const repositoryWasRouted = desired.size > 0;
+
+  if (!repositoryWasRouted) {
+    for (const key of cfg.routing.teams?.[team] || []) desired.add(key);
+  }
+
+  for (const key of cfg.routing.types?.[issueType] || []) desired.add(key);
+
+  return desired;
+}
+
 async function getIssue(owner, repo, number) {
   const data = await graphql(`
     query($owner:String!,$repo:String!,$number:Int!) {
@@ -120,23 +150,42 @@ async function main() {
 
   const projectByKey = new Map();
   for (const [key, definition] of Object.entries(cfg.projects)) {
-    const project = projects.find(item => item.number === definition.number);
-    if (!project) throw new Error(`Configured project ${key} (#${definition.number}) not found`);
+    const project = projects.find(item => {
+      if (definition.number != null && item.number === definition.number) return true;
+      if (definition.title && item.title === definition.title) return true;
+      return false;
+    });
+
+    if (!project) {
+      const selector = definition.number != null
+        ? `#${definition.number}`
+        : `title "${definition.title}"`;
+      throw new Error(`Configured project ${key} (${selector}) not found`);
+    }
+
     projectByKey.set(key, project);
   }
 
   const issueType = issue.issueType?.name ?? null;
   const team = fieldValue(fields, 'Team');
-  const desiredKeys = new Set([
-    ...(cfg.routing.teams?.[team] || []),
-    ...(cfg.routing.types?.[issueType] || []),
-  ]);
+  const desiredKeys = calculateDesiredProjectKeys(
+    cfg,
+    issueType,
+    team,
+    repo,
+  );
   const desired = [...desiredKeys].map(key => projectByKey.get(key));
   const governedIds = new Set([...projectByKey.values()].map(project => project.id));
   const desiredIds = new Set(desired.map(project => project.id));
   const currentGoverned = issue.projectItems.nodes.filter(item => governedIds.has(item.project.id));
 
-  console.log(JSON.stringify({ repository, issue: issueNumber, issueType, team, desired: desired.map(p => p.title) }, null, 2));
+  console.log(JSON.stringify({
+    repository,
+    issue: issueNumber,
+    issueType,
+    team,
+    desired: desired.map(p => p.title),
+  }, null, 2));
 
   for (const project of desired) {
     if (!currentGoverned.some(item => item.project.id === project.id)) {
