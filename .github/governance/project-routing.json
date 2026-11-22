@@ -10,6 +10,7 @@
     "incidents": { "number": 12 }
   },
   "routing": {
+    "preserveOnRemoval": ["portfolio"],
     "exclusiveTypes": {
       "Epic": ["portfolio"]
     },
