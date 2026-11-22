@@ -177,6 +177,13 @@ async function main() {
   const desired = [...desiredKeys].map(key => projectByKey.get(key));
   const governedIds = new Set([...projectByKey.values()].map(project => project.id));
   const desiredIds = new Set(desired.map(project => project.id));
+  const preservedProjectIds = new Set(
+    (cfg.routing.preserveOnRemoval || []).map(key => {
+      const project = projectByKey.get(key);
+      if (!project) throw new Error(`Configured preserved project ${key} was not found`);
+      return project.id;
+    }),
+  );
   const currentGoverned = issue.projectItems.nodes.filter(item => governedIds.has(item.project.id));
 
   console.log(JSON.stringify({
@@ -195,7 +202,7 @@ async function main() {
   }
 
   for (const item of currentGoverned) {
-    if (!desiredIds.has(item.project.id)) {
+    if (!desiredIds.has(item.project.id) && !preservedProjectIds.has(item.project.id)) {
       await remove(item.project.id, item.id);
       console.log(`Removed from ${item.project.title}`);
     }
